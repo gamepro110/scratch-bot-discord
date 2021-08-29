@@ -4,6 +4,7 @@ using Discord.WebSocket;
 
 namespace Scratch_Bot_core
 {
+    // TODO remove ' ' after log before ]
     public class Bot : IBot
     {
         public Bot(DiscordSocketClient _socketClient, CommandService _commandService, ICommandHandler _commandHadler, IServiceProvider _provider, LoggingService _loggingService)

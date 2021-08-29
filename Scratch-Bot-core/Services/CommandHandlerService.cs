@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Scratch_Bot_core.Modules;
 using System.Reflection;
 
 namespace Scratch_Bot_core
@@ -15,7 +16,10 @@ namespace Scratch_Bot_core
         }
 
         public async Task InitAsync()
-            => await commandService.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
+        {
+            commandService.AddTypeReader<DiceType>(provider.GetService(typeof(DiceTypeReader)) as TypeReader);
+            await commandService.AddModulesAsync(Assembly.GetEntryAssembly(), provider);
+        }
 
         public Task<IResult>? HandleCommandAsync(SocketMessage IncommingMessage)
         {

@@ -18,7 +18,7 @@ namespace Scratch_Bot_core
             return Task.Delay(1);
         }
 
-        public Task Log(string message, LogSeverity severity)
+        public Task Log(string message, LogSeverity severity = LogSeverity.Info)
         {
             for (int i = 0; i < Loggers.Count; i++)
             {

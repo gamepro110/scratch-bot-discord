@@ -1,11 +1,22 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core.Modules
 {
     [Group("Sudo")]
-    public partial class SudoModule : CustomBaseModule
+    public class SudoModule : CustomBaseModule
     {
+        public SudoModule(DiscordSocketClient _socketClient, LoggingService _logging)
+        {
+            socketClient = _socketClient;
+            logging = _logging;
+        }
+
         [Command("Ban")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.BanMembers)]
@@ -19,18 +30,18 @@ namespace Scratch_Bot_core.Modules
         [Command("purge")]
         [Summary("Cleanup x messages. (calling message will also be cleaned up, default = 10)")]
         [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ManageMessages)]
-        public async Task PurgeMessages(int _amount = 10)
+        public async Task PurgeMessages(int amount = 10)
         {
             EmbedBuilder _em = new();
 
-            if (_amount <= 0)
+            if (amount <= 0)
             {
                 _em.Color = Color.DarkBlue;
                 _em.Title = "cant delete anything if you dont give me an amount to delete...";
             }
             else
             {
-                IEnumerable<IMessage> _messages = await Context.Channel.GetMessagesAsync(Context.Message, Direction.Before, _amount).FlattenAsync();
+                IEnumerable<IMessage> _messages = await Context.Channel.GetMessagesAsync(Context.Message, Direction.Before, amount).FlattenAsync();
                 IEnumerable<IMessage> _filteredMessages = _messages.Where(x => (DateTimeOffset.UtcNow - x.Timestamp).TotalDays <= 14); // trying to bulk delete messages older than 14 days will result in a bad request!!
                 int _filteredCount = _filteredMessages.Count();
 
@@ -52,123 +63,86 @@ namespace Scratch_Bot_core.Modules
 
             await ReplyAsync(embed: _em.Build());
         }
-    }
 
-    public class HelpModule : CustomBaseModule
-    {
-        public HelpModule(CommandService _commandService, IServiceProvider _serviceProvider)
+        #region ping
+        [Command("Ping")]
+        public async Task PingAll(string url = "google.com", int amountOfPings = 4)
         {
-            commandService = _commandService;
-            provider = _serviceProvider;
-        }
+            EmbedBuilder builder = new();
 
-        Func<IEnumerable<CommandInfo>, string> PrintModuleCommands = (IEnumerable<CommandInfo> cmdInfo) =>
-        {
-            string output = "";
+            builder.Title = "ping";
+            builder.Description = "just checkin my pings";
 
-            foreach (var item in cmdInfo)
+            builder.AddField(f =>
             {
-                output += $"   {item.Name}\n";
-            }
-
-            return output;
-        };
-
-        public void RecursiveListLoop(IEnumerable<ModuleInfo> modules, ref string text, int givenDepth = 0)
-        {
-            foreach (var mod in modules)
-            {
-                text += $"Module: {mod.Name}\n";
-                text += "cmd:\n";
-                text += PrintModuleCommands(mod.Commands);
-                text += "submods:\n";
-                RecursiveListLoop(mod.Submodules, ref text, givenDepth++);
-                text += "\n";
-            }
-            return;
-        }
-
-        [Command("h",true)]
-        public async Task Task(string name = "")
-        {
-            string txt = "";
-            RecursiveListLoop(commandService.Modules, ref txt);
-
-            EmbedBuilder builder = new()
-            {
-                Title = "all commands",
-                Description = txt,
-            };
-
-            SendEmbed(builder);
-        }
-
-        [Command("help")]
-        [Summary("Displays All Commands")]
-        public async Task Help(string _name = "")
-        {
-            EmbedBuilder _embed = new();
-            ModuleInfo _mod;
-            if (string.IsNullOrEmpty(_name))
-            {
-                _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() != "");
-                if (_mod == null)
-                {
-                    await ReplyAsync("bot confussion...");
-                    return;
-                }
-
-                _embed.Description = $"{_mod.Summary}\n" +
-                                     (!string.IsNullOrEmpty(_mod.Remarks) ? $"{_mod.Remarks}" : $"") +
-                                     (_mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "");
-            }
-            else
-            {
-                _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() == _name.ToLower());
-                if (_mod == null)
-                {
-                    await ReplyAsync("No mod with that name was found...");
-                    return;
-                }
-
-                _embed.Description = _mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "";
-            }
-
-            _embed.Title = _mod.Name;
-            _embed.Color = Color.DarkBlue;
-
-            AddCommands(_mod, ref _embed);
-
-            await ReplyAsync(embed: _embed.Build());
-        }
-
-        private void AddCommands(ModuleInfo mod, ref EmbedBuilder embed)
-        {
-            foreach (CommandInfo item in mod.Commands)
-            {
-                item.CheckPreconditionsAsync(Context, provider).GetAwaiter().GetResult();
-                AddCommand(item, ref embed);
-            }
-        }
-
-        private static void AddCommand(CommandInfo info, ref EmbedBuilder embed)
-        {
-            string value = string.Format(
-                "**how to use** `{0}{1}`\n{2}\n{3}",
-                Settings.CommandPrefix,
-                info.Aliases[0],
-                info.Summary,
-                (string.IsNullOrEmpty(info.Remarks) ? "" : '\n' + info.Remarks + '\n')
-                );
-
-            embed.AddField(f =>
-            {
-                f.Name = $"__**{info.Name}**__";
-                f.Value = value;
+                f.Name = "Bot ping";
+                f.Value = $"{socketClient.Latency} ms";
             });
+
+            PingRequest request = new();
+            await request.Send(url, amountOfPings);
+
+            builder.AddField(f =>
+            {
+                f.Name = "Web ping";
+                f.Value = string.Format(
+                    "(send/received/accuracy): ({0}/{1}/{2:0.00})\n(total/avg): ({3}/{4:0.0}) ms",
+                    request.plannedTrips,
+                    request.succesfulTrips,
+                    request.accuracy,
+
+                    request.totalTime,
+                    request.averageTime
+                    );
+            });
+
+            await SendEmbed(builder);
         }
 
-        private readonly CommandService commandService;
-        private readonly IServiceProvider provider;
+        [Group("ping")]
+        public class PingModule : CustomBaseModule
+        {
+            public PingModule(DiscordSocketClient discordSocketClient)
+            {
+                socketClient = discordSocketClient;
+            }
+
+            [Command("Bot")]
+            public async Task BotPing()
+            {
+                EmbedBuilder builder = new()
+                {
+                    Title = "Bot ping",
+                    Description = $"last bot ping: {socketClient.Latency} ms",
+                };
+
+                await SendEmbed(builder);
+            }
+
+            [Command("Web")]
+            public async Task webPing(string url = "google.com", int numPing = 4)
+            {
+                PingRequest request = new();
+                await request.Send(url, numPing);
+
+                string txt = "";
+                txt += $"requests (send/recieved/accuracy): ({request.plannedTrips}/{request.succesfulTrips}/{(float)request.succesfulTrips / request.plannedTrips})";
+                txt += $"time (total/avg): ({request.totalTime}/{request.totalTime / request.succesfulTrips})";
+
+                EmbedBuilder builder = new()
+                {
+                    Title = $"ping {url}",
+                    Description = txt,
+                };
+
+                await SendEmbed(builder);
+            }
+
+            private readonly DiscordSocketClient socketClient;
+        }
+        #endregion
+
+        DiscordSocketClient socketClient;
+        LoggingService logging;
     }
 }

@@ -18,16 +18,22 @@ namespace Scratch_Bot_core
             //.AddSingleton<ILogger, FileLoggingService>()
             //.AddSingleton<ILogger, WebhookLoggingService>()
             .AddSingleton<LoggingService>(provider => new(provider.GetServices<ILogger>()))
+            // TypeReaders
+            .AddSingleton<DiceTypeReader>()
             // modules
-            .AddSingleton<HelpModule>()
             .AddSingleton<EmptyModule>()
+            .AddSingleton<DiceRollModule>()
+            .AddSingleton<HelpModule>()
             .AddSingleton<SudoModule>()
+            .AddSingleton<SudoModule.PingModule>()
+            .AddSingleton<VoiceChatModule>()
             // services
             .AddSingleton<DiscordSocketClient>(provider => new(Settings.socketConfig))
             .AddSingleton<CommandService>(provider => new(Settings.commandConfig))
             .AddSingleton<ICommandHandler, CommandHandlerService>()
             // etc.
             .AddSingleton<CancellationTokenSource>()
+            .AddScoped<Random>(provider => new(DateTime.UnixEpoch.GetHashCode()))
             .BuildServiceProvider();
     }
 }
