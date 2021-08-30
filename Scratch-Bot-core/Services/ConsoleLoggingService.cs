@@ -1,4 +1,6 @@
 ﻿using Discord;
+using System;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core
 {

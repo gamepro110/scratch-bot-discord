@@ -16,46 +16,6 @@ namespace Scratch_Bot_core.Modules
             loggingService = _loggingService;
         }
 
-        Func<IEnumerable<CommandInfo>, string> ModuleCommands = (IEnumerable<CommandInfo> cmdInfo) =>
-        {
-            string output = "";
-
-            foreach (var item in cmdInfo)
-            {
-                output += $"--{item.Name}\n";
-            }
-
-            return output;
-        };
-
-        public void PrintModules(IEnumerable<ModuleInfo> modules, ref string text)
-        {
-            foreach (var mod in modules)
-            {
-                text += $"Module: {mod.Name}\n";
-                text += "{\n";
-                text += ModuleCommands(mod.Commands);
-                //text += "submods:\n";
-                text += "}\n\n";
-            }
-            return;
-        }
-
-        [Command("ha2", true)]
-        public async Task DebugPrintModules(string name = "")
-        {
-            string txt = "";
-            PrintModules(commandService.Modules, ref txt);
-
-            EmbedBuilder builder = new()
-            {
-                Title = "all commands",
-                Description = txt,
-            };
-
-            await SendEmbed(builder);
-        }
-
         #region newHelp
 
         private void BuildEmbed(ref EmbedBuilder builder, string modName)
@@ -124,7 +84,7 @@ namespace Scratch_Bot_core.Modules
                         {
                             text += $"**{c.Name}**(";
 
-                            if (c.Parameters.Count() == 1)
+                            if (c.Parameters.Count == 1)
                             {
                                 text += c.Parameters[0].Name;
                                 text += c.Parameters[0].DefaultValue == null ? "" : $" = {c.Parameters[0].DefaultValue}";
@@ -181,44 +141,44 @@ namespace Scratch_Bot_core.Modules
         #endregion
 
         #region help
-        [Command("help")]
-        [Summary("Displays All Commands")]
-        public async Task Help(string _name = "")
-        {
-            EmbedBuilder _embed = new();
-            ModuleInfo _mod;
-            if (string.IsNullOrEmpty(_name))
-            {
-                _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() != "");
-                if (_mod == null)
-                {
-                    await ReplyAsync("bot confussion...");
-                    return;
-                }
-
-                _embed.Description = $"{_mod.Summary}\n" +
-                                     (!string.IsNullOrEmpty(_mod.Remarks) ? $"{_mod.Remarks}" : $"") +
-                                     (_mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "");
-            }
-            else
-            {
-                _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() == _name.ToLower());
-                if (_mod == null)
-                {
-                    await ReplyAsync("No mod with that name was found...");
-                    return;
-                }
-
-                _embed.Description = _mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "";
-            }
-
-            _embed.Title = _mod.Name;
-            _embed.Color = Color.DarkBlue;
-
-            AddCommands(_mod, ref _embed);
-
-            await ReplyAsync(embed: _embed.Build());
-        }
+        //[Command("help")]
+        //[Summary("Displays All Commands")]
+        //public async Task Help(string _name = "")
+        //{
+        //    EmbedBuilder _embed = new();
+        //    ModuleInfo _mod;
+        //    if (string.IsNullOrEmpty(_name))
+        //    {
+        //        _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() != "");
+        //        if (_mod == null)
+        //        {
+        //            await ReplyAsync("bot confussion...");
+        //            return;
+        //        }
+        //
+        //        _embed.Description = $"{_mod.Summary}\n" +
+        //                             (!string.IsNullOrEmpty(_mod.Remarks) ? $"{_mod.Remarks}" : $"") +
+        //                             (_mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "");
+        //    }
+        //    else
+        //    {
+        //        _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() == _name.ToLower());
+        //        if (_mod == null)
+        //        {
+        //            await ReplyAsync("No mod with that name was found...");
+        //            return;
+        //        }
+        //
+        //        _embed.Description = _mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "";
+        //    }
+        //
+        //    _embed.Title = _mod.Name;
+        //    _embed.Color = Color.DarkBlue;
+        //
+        //    AddCommands(_mod, ref _embed);
+        //
+        //    await ReplyAsync(embed: _embed.Build());
+        //}
 
         private void AddCommands(ModuleInfo mod, ref EmbedBuilder embed)
         {

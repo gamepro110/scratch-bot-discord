@@ -2,6 +2,9 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Scratch_Bot_core.Modules;
+using Scratch_Bot_core.TypeReaders;
+using System;
+using System.Threading;
 
 namespace Scratch_Bot_core
 {
@@ -22,7 +25,6 @@ namespace Scratch_Bot_core
             .AddSingleton<DiceTypeReader>()
             // modules
             .AddSingleton<EmptyModule>()
-            .AddSingleton<DiceRollModule>()
             .AddSingleton<HelpModule>()
             .AddSingleton<SudoModule>()
             .AddSingleton<SudoModule.PingModule>()

@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Scratch_Bot_core;
+using System;
+using System.IO;
+using System.Threading;
 
 // configue service provider
 ServiceProvider provider = (ServiceProvider)ContainerConfig.Configure();
@@ -11,7 +14,11 @@ if (app != null)
     if (argLines.Length == 2)
     {
         Settings.WebhookUrl = argLines[0]; // set the webhook url
-        await app.Run(argLines[1], provider.GetService<CancellationTokenSource>().Token);
+        CancellationTokenSource? tokenSource = provider.GetService<CancellationTokenSource>();
+        if (tokenSource != null)
+        {
+            await app.Run(argLines[1], tokenSource.Token);
+        }
     }
     else
     {

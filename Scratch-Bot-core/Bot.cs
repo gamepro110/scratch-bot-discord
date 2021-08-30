@@ -1,18 +1,20 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core
 {
     // TODO remove ' ' after log before ]
     public class Bot : IBot
     {
-        public Bot(DiscordSocketClient _socketClient, CommandService _commandService, ICommandHandler _commandHadler, IServiceProvider _provider, LoggingService _loggingService)
+        public Bot(DiscordSocketClient _socketClient, CommandService _commandService, ICommandHandler _commandHadler, LoggingService _loggingService)
         {
             socketClient = _socketClient;
             commandService = _commandService;
             commandHandler = _commandHadler;
-            provider = _provider;
             loggingService = _loggingService;
 
             AcceptedCommands = new Dictionary<Task<IResult>, SocketMessage>();
@@ -44,7 +46,7 @@ namespace Scratch_Bot_core
             {
                 if (AcceptedCommands.Count > 0)
                 {
-                    Task<IResult> finishedTasks = await Task.WhenAny(AcceptedCommands.Keys.ToArray());
+                    Task<IResult> finishedTasks = await Task.WhenAny(AcceptedCommands.Keys);
 
                     if (!finishedTasks.Result.IsSuccess && finishedTasks.Result.Error != CommandError.UnknownCommand)
                     {
@@ -72,7 +74,6 @@ namespace Scratch_Bot_core
         private readonly DiscordSocketClient socketClient;
         private readonly CommandService commandService;
         private readonly ICommandHandler commandHandler;
-        private readonly IServiceProvider provider;
         private readonly LoggingService loggingService;
 
         // used for processing multiple requests at once

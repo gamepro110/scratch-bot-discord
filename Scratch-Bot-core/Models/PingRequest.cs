@@ -1,10 +1,11 @@
 ﻿using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core.Modules
 {
     public class PingRequest
     {
-        private Ping sender = new();
+        private readonly Ping sender = new();
         public double totalTime = 0;
         public int plannedTrips = 0;
         public int succesfulTrips = 0;

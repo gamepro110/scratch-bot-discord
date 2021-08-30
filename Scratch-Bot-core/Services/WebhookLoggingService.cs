@@ -1,5 +1,8 @@
 ﻿using Discord;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core
 {
@@ -16,10 +19,11 @@ namespace Scratch_Bot_core
             {
                 using HttpClient client = new();
 
-                Dictionary<string, string?> querry = new()
+                List<KeyValuePair<string?, string?>> querry = new()
                 {
-                    { "username", "scratch-webhook-log" },
-                    { "content", FormatMsg(message, severity) }
+                    //new KeyValuePair<string?, string?>(message, message),
+                    new KeyValuePair<string?, string?>("username", "scratch-webhook-log"),
+                    new KeyValuePair<string?, string?>("content", FormatMsg(message, severity)),
                 };
 
                 FormUrlEncodedContent postData = new(querry);

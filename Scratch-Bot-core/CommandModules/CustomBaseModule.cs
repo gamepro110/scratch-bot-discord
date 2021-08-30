@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core.Modules
 {

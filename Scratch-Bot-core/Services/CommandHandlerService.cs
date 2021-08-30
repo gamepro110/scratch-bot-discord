@@ -2,7 +2,10 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Scratch_Bot_core.Modules;
+using Scratch_Bot_core.TypeReaders;
+using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_core
 {

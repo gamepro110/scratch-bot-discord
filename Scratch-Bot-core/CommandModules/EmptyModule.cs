@@ -26,7 +26,7 @@ namespace Scratch_Bot_core.Modules
         {
             EmbedBuilder _embed = new();
 
-            await (Context.Channel as ITextChannel).DeleteMessageAsync(Context.Message);
+            await ((ITextChannel)Context.Channel).DeleteMessageAsync(Context.Message);
 
             await ReplyAsync(msg, embed: _embed.Description != "" ? _embed.Description != null ? _embed.Build() : null : null);
         }

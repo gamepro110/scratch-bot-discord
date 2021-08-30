@@ -3,22 +3,27 @@ using Scratch_Bot_core.Modules;
 using Discord;
 using Discord.Commands;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System;
 
-public class DiceTypeReader : TypeReader
+namespace Scratch_Bot_core.TypeReaders
 {
-    public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
+    public class DiceTypeReader : TypeReader
     {
-        DiceType result;
-        string patern = @"^d[0-9][1-9]*[1-9]*$";
-
-        Match match = Regex.Match(input, patern);
-        if (match.Success)
+        public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
-            string parsedInput = match.Value;
-            result = Enum.Parse<DiceType>(parsedInput);
-            return Task.FromResult(TypeReaderResult.FromSuccess(result));
-        }
+            DiceType result;
+            string patern = @"^d[0-9][1-9]*[1-9]*$";
 
-        return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "input could not be parsed as boolean"));
+            Match match = Regex.Match(input, patern);
+            if (match.Success)
+            {
+                string parsedInput = match.Value;
+                result = Enum.Parse<DiceType>(parsedInput);
+                return Task.FromResult(TypeReaderResult.FromSuccess(result));
+            }
+
+            return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "input could not be parsed as boolean"));
+        }
     }
 }

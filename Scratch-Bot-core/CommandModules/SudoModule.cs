@@ -11,10 +11,9 @@ namespace Scratch_Bot_core.Modules
     [Group("Sudo")]
     public class SudoModule : CustomBaseModule
     {
-        public SudoModule(DiscordSocketClient _socketClient, LoggingService _logging)
+        public SudoModule(DiscordSocketClient _socketClient)
         {
             socketClient = _socketClient;
-            logging = _logging;
         }
 
         [Command("Ban")]
@@ -52,8 +51,8 @@ namespace Scratch_Bot_core.Modules
                 }
                 else
                 {
-                    await (Context.Channel as ITextChannel).DeleteMessagesAsync(_filteredMessages);//deletes previous messages
-                    await (Context.Channel as ITextChannel).DeleteMessageAsync(Context.Message);//deletes calling messages
+                    await ((ITextChannel)Context.Channel).DeleteMessagesAsync(_filteredMessages);//deletes previous messages
+                    await ((ITextChannel)Context.Channel).DeleteMessageAsync(Context.Message);//deletes calling messages
 
                     _em.Color = Color.Green;
                     _em.Title = "did thing. you proud??";
@@ -120,7 +119,7 @@ namespace Scratch_Bot_core.Modules
             }
 
             [Command("Web")]
-            public async Task webPing(string url = "google.com", int numPing = 4)
+            public async Task WebPing(string url = "google.com", int numPing = 4)
             {
                 PingRequest request = new();
                 await request.Send(url, numPing);
@@ -142,7 +141,6 @@ namespace Scratch_Bot_core.Modules
         }
         #endregion
 
-        DiscordSocketClient socketClient;
-        LoggingService logging;
+        private readonly DiscordSocketClient socketClient;
     }
 }
