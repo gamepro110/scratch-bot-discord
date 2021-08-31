@@ -11,9 +11,10 @@ namespace Scratch_Bot_core.Modules
     [Group("Sudo")]
     public class SudoModule : CustomBaseModule
     {
-        public SudoModule(DiscordSocketClient _socketClient)
+        public SudoModule(DiscordSocketClient _socketClient, LoggingService _loggingService)
         {
             socketClient = _socketClient;
+            loggingService = _loggingService;
         }
 
         [Command("Ban")]
@@ -62,6 +63,14 @@ namespace Scratch_Bot_core.Modules
 
             await ReplyAsync(embed: _em.Build());
         }
+
+        [Command("Remind")]
+        public async Task SendReminder(string reminder) =>
+            await loggingService.Log<WebhookLoggingService>(reminder);
+
+        [Command("LogError")]
+        public async Task LogToLogFile(string message) =>
+            await loggingService.Log<FileLoggingService>(message);
 
         #region ping
         [Command("Ping")]
@@ -142,5 +151,6 @@ namespace Scratch_Bot_core.Modules
         #endregion
 
         private readonly DiscordSocketClient socketClient;
+        private readonly LoggingService loggingService;
     }
 }

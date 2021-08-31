@@ -29,6 +29,23 @@ namespace Scratch_Bot_core
             return Task.Delay(1);
         }
 
+        /// <summary>
+        /// Log using a specific ILogger
+        /// </summary>
+        /// <typeparam name="T">T = Class : ILogger </typeparam>
+        /// <param name="message">message to log</param>
+        /// <returns></returns>
+        public async Task Log<T>(string message) where T : ILogger
+        {
+            foreach (ILogger item in Loggers)
+            {
+                if (item.GetType() == typeof(T))
+                {
+                    await item.Log(message, Settings.BotLogLevel);
+                }
+            }
+        }
+
         private readonly List<ILogger> Loggers;
     }
 }

@@ -17,9 +17,9 @@ namespace Scratch_Bot_core
             // bot
             .AddSingleton<IBot, Bot>()
             // logging
-            .AddSingleton<ILogger, ConsoleLoggingService>()
-            //.AddSingleton<ILogger, FileLoggingService>()
-            //.AddSingleton<ILogger, WebhookLoggingService>()
+            //.AddSingleton<ILogger, ConsoleLoggingService>()
+            .AddSingleton<ILogger, FileLoggingService>()
+            .AddSingleton<ILogger, WebhookLoggingService>()
             .AddSingleton<LoggingService>(provider => new(provider.GetServices<ILogger>()))
             // TypeReaders
             .AddSingleton<DiceTypeReader>()
