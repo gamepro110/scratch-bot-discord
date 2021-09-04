@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using Scratch_Bot_core.Modules;
+using Discord;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +22,6 @@ namespace Scratch_Bot_core
 
                 List<KeyValuePair<string?, string?>> querry = new()
                 {
-                    //new KeyValuePair<string?, string?>(message, message),
                     new KeyValuePair<string?, string?>("username", "scratch-webhook-log"),
                     new KeyValuePair<string?, string?>("content", FormatMsg(message, severity)),
                 };

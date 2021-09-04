@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scratch_Bot_core.Modules
@@ -11,10 +12,11 @@ namespace Scratch_Bot_core.Modules
     [Group("Sudo")]
     public class SudoModule : CustomBaseModule
     {
-        public SudoModule(DiscordSocketClient _socketClient, LoggingService _loggingService)
+        public SudoModule(DiscordSocketClient _socketClient, LoggingService _loggingService, CancellationTokenSource _cancellationTokenSource)
         {
             socketClient = _socketClient;
             loggingService = _loggingService;
+            mainCancellationToken = _cancellationTokenSource;
         }
 
         [Command("Ban")]
@@ -71,6 +73,19 @@ namespace Scratch_Bot_core.Modules
         [Command("LogError")]
         public async Task LogToLogFile(string message) =>
             await loggingService.Log<FileLoggingService>(message);
+
+        [Command("Shutdown")]
+        public async Task Shutdown(string reason = "")
+        {
+            if (!string.IsNullOrWhiteSpace(reason))
+            {
+                await LogToLogFile(reason);
+            }
+
+            await socketClient.LogoutAsync();
+            await socketClient.StopAsync();
+            mainCancellationToken.Cancel();
+        }
 
         #region ping
         [Command("Ping")]
@@ -152,5 +167,6 @@ namespace Scratch_Bot_core.Modules
 
         private readonly DiscordSocketClient socketClient;
         private readonly LoggingService loggingService;
+        private readonly CancellationTokenSource mainCancellationToken;
     }
 }
