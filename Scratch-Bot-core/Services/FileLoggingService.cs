@@ -7,9 +7,9 @@ namespace Scratch_Bot_core
 {
     public class FileLoggingService : BaseLogger
     {
-        public FileLoggingService(CancellationToken _cancellationToken)
+        public FileLoggingService(CancellationTokenSource _tokenSource)
         {
-            cancellationToken = _cancellationToken;
+            cancellationToken = _tokenSource.Token;
         }
 
         public override async Task Log(LogMessage message)
