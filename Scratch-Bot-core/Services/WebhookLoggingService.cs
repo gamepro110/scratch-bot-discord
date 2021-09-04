@@ -16,7 +16,7 @@ namespace Scratch_Bot_core
 
         public override async Task Log(string message, LogSeverity severity)
         {
-            if (severity < Settings.BotLogLevel)
+            if (severity <= Settings.BotLogLevel)
             {
                 using HttpClient client = new();
 

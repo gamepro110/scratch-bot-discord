@@ -5,39 +5,42 @@ namespace Scratch_Bot_core
 {
     public abstract class BaseLogger : ILogger
     {
-        bool TwoLine => logFormat == LogFormat.twoLine;
-        bool FourLine => logFormat == LogFormat.fourLine;
+        private static bool TwoLine => Settings.BotLogFormat == LogFormat.twoLine;
+        private static bool FourLine => Settings.BotLogFormat == LogFormat.fourLine;
 
-        protected string FormatMsg(LogMessage msg)
+        protected static string FormatMsg(LogMessage msg)
         {
             // prints message and source, adds exception if not null
             return FormatMsg(
                 string.Format(
-                    "(MSG) {0} " +
-                    "(SRC) {1} " +
-                    "{2} ",
+                    "(MSG) {0}" +
+                    " (SRC) {1}" +
+                    "{2}",
                     msg.Message,
                     msg.Source,
-                    msg.Exception == null ? "" : "(EXCEPTION) " + msg.Exception.Message
+                    msg.Exception == null ? "" : " (EXCEPTION) " + msg.Exception.Message
                     ),
                 msg.Severity
                 );
         }
 
-        protected string FormatMsg(string msg, LogSeverity severity)
+        protected static string FormatMsg(string msg, LogSeverity severity)
         {
+            string fourOrTwoLine = FourLine || TwoLine ? "\n" : "";
+            string fourline = FourLine ? "\n" : "";
+            string fourlineTab = FourLine ? "\t" : "";
+
             return string.Format(
-                "({0}):{2}[{3}{1}{3}]",
+                "({0}):{2}[{3}{4}{1}{3}]\n",
                 severity,
                 msg,
-                FourLine || TwoLine ? "\n" : "",
-                FourLine ? "\n\t" : ""
+                fourOrTwoLine,
+                fourline,
+                fourlineTab
             );
         }
 
         public abstract Task Log(LogMessage message);
         public abstract Task Log(string message, LogSeverity severity);
-
-        protected LogFormat logFormat;
     }
 }

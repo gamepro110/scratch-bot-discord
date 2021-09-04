@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Discord;
+using Microsoft.Extensions.DependencyInjection;
 using Scratch_Bot_core;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 // configue service provider
 ServiceProvider provider = (ServiceProvider)ContainerConfig.Configure();
 IApp app = (IApp)provider.GetService(typeof(IApp));
+LoggingService loggingService = (LoggingService)provider.GetService(typeof(LoggingService));
 
 if (app != null)
 {
@@ -16,23 +19,19 @@ if (app != null)
         if (argLines.Length == 2)
         {
             Settings.WebhookUrl = argLines[0]; // set the webhook url
-            CancellationTokenSource? tokenSource = provider.GetService<CancellationTokenSource>();
-            if (tokenSource != null)
-            {
-                await app.Run(argLines[1], tokenSource.Token);
-            }
+            await app.Run(argLines[1]);
         }
         else
         {
-            Console.WriteLine($"something went wrong while reading {Settings.TokenFile}");
+            await loggingService.Log($"something went wrong while reading {Settings.TokenFile}", Discord.LogSeverity.Error);
         }
     }
     else
     {
-        Console.WriteLine($"{Settings.TokenFile} not found");
+        await loggingService.Log($"{Settings.TokenFile} not found", LogSeverity.Error);
     }
 }
 else
 {
-    Console.WriteLine("IAPP was null...");
+    await loggingService.Log("IAPP was null...", LogSeverity.Error);
 }

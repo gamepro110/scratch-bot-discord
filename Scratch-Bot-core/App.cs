@@ -10,9 +10,9 @@ namespace Scratch_Bot_core
             bot = ibot;
         }
 
-        public async Task Run(string token, CancellationToken cancellationToken)
+        public async Task Run(string token)
         {
-            await bot.Run(token, cancellationToken);
+            await bot.Run(token);
         }
 
         private readonly IBot bot;

@@ -10,11 +10,12 @@ namespace Scratch_Bot_core
     // TODO remove ' ' after log before ]
     public class Bot : IBot
     {
-        public Bot(DiscordSocketClient _socketClient, CommandService _commandService, ICommandHandler _commandHadler, LoggingService _loggingService)
+        public Bot(DiscordSocketClient _socketClient, CommandService _commandService, ICommandHandler _commandHadler, CancellationTokenSource _cancellationTokenSource, LoggingService _loggingService)
         {
             socketClient = _socketClient;
             commandService = _commandService;
             commandHandler = _commandHadler;
+            tokenSource = _cancellationTokenSource;
             loggingService = _loggingService;
 
             AcceptedCommands = new Dictionary<Task<IResult>, SocketMessage>();
@@ -35,8 +36,10 @@ namespace Scratch_Bot_core
             commandService.CommandExecuted -= commandHandler.CommandExecutedAsync;
         }
 
-        public async Task Run(string token, CancellationToken cancellationToken)
+        public async Task Run(string token)
         {
+            CancellationToken cancellationToken = tokenSource.Token;
+
             await socketClient.LoginAsync(TokenType.Bot, token);
             await socketClient.StartAsync();
 
@@ -56,7 +59,7 @@ namespace Scratch_Bot_core
                     AcceptedCommands.Remove(finishedTasks);
                 }
 
-                await Task.Delay(800, cancellationToken);
+                await Task.Delay(800);
             }
 
             await loggingService.Log("Exiting...", LogSeverity.Info);
@@ -75,6 +78,7 @@ namespace Scratch_Bot_core
         private readonly CommandService commandService;
         private readonly ICommandHandler commandHandler;
         private readonly LoggingService loggingService;
+        private readonly CancellationTokenSource tokenSource;
 
         // used for processing multiple requests at once
         private readonly Dictionary<Task<IResult>, SocketMessage> AcceptedCommands;

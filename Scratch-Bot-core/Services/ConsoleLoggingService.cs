@@ -20,7 +20,7 @@ namespace Scratch_Bot_core
 
         private void LogConsole(string msg, LogSeverity severity)
         {
-            if (severity < Settings.BotLogLevel)
+            if (severity <= Settings.BotLogLevel)
             {
                 switch (severity)
                 {
@@ -47,7 +47,7 @@ namespace Scratch_Bot_core
                         break;
                 }
 
-                Console.WriteLine(msg);
+                Console.Write(msg);
                 Console.ResetColor();
             }
         }
