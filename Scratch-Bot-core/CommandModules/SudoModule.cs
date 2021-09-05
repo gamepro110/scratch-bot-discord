@@ -20,6 +20,7 @@ namespace Scratch_Bot_core.Modules
         }
 
         [Command("Ban")]
+        [Summary("ban a user, reason why can be given after the name inside \"\"")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.BanMembers)]
         [RequireBotPermission(GuildPermission.BanMembers)]
@@ -29,11 +30,12 @@ namespace Scratch_Bot_core.Modules
             await ReplyAsync("ok!");
         }
 
-        [Command("purge")]
-        [Summary("Cleanup x messages. (calling message will also be cleaned up, default = 10)")]
+        [Command("Purge")]
+        [Summary("Cleanup x messages, calling message will also be cleaned up. (default = 10)")]
         [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ManageMessages)]
         public async Task PurgeMessages(int amount = 10)
         {
+            // TODO make deleting calling message optional
             EmbedBuilder _em = new();
 
             if (amount <= 0)
@@ -89,6 +91,7 @@ namespace Scratch_Bot_core.Modules
 
         #region ping
         [Command("Ping")]
+        [Summary("send out a ping <amountOfPings> requests to <URL> and get the bots latency")]
         public async Task PingAll(string url = "google.com", int amountOfPings = 4)
         {
             EmbedBuilder builder = new();
@@ -131,6 +134,7 @@ namespace Scratch_Bot_core.Modules
             }
 
             [Command("Bot")]
+            [Summary("get the bots latency")]
             public async Task BotPing()
             {
                 EmbedBuilder builder = new()
@@ -143,6 +147,7 @@ namespace Scratch_Bot_core.Modules
             }
 
             [Command("Web")]
+            [Summary("send out a ping <amountOfPings> requests to <URL>")]
             public async Task WebPing(string url = "google.com", int numPing = 4)
             {
                 PingRequest request = new();

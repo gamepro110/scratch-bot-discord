@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,105 +15,54 @@ namespace Scratch_Bot_core.Modules
             loggingService = _loggingService;
         }
 
-        #region newHelp
-
-        private void BuildEmbed(ref EmbedBuilder builder, string modName)
+        [Command("H", true)]
+        [Summary("Test Summary")]
+        public async Task HelpCommand(string moduleName = "")
         {
-            string text = "";
+            EmbedBuilder builder = new()
+            {
+                Title = $"Help {moduleName}",
+                Color = Color.DarkBlue,
+            };
 
-            if (modName == "")
+            moduleName = moduleName.ToLower();
+            string text = "";
+            string modName = "";
+
+            if (moduleName == "")
             {
                 foreach (var mod in commandService.Modules)
                 {
-                    builder.AddField(f => 
+                    text = "";
+                    modName = mod.Name.Replace("Module", "").Replace("Empty", "");
+
+                    if (string.IsNullOrEmpty(modName))
                     {
-                        text = "";
-                        mod.Commands.ToList().ForEach(c =>
+                        ForeachCommand(mod, ref text);
+                        builder.Description = text;
+                    }
+                    else
+                    {
+                        ForeachCommand(mod, ref text);
+                        builder.AddField(f =>
                         {
-                            text += $"{c.Name.Replace("Module", "").Replace("Empty", "")}(";
-
-                            object? value = null;
-                            if (c.Parameters.Count == 1)
-                            {
-                                text += c.Parameters[0].Name;
-                                value = c.Parameters[0].DefaultValue;
-                                text += value == null ? "" : $" = {value}";
-                            }
-                            else
-                            {
-                                foreach (var par in c.Parameters)
-                                {
-                                    text += par.Name;
-                                    value = par.DefaultValue;
-
-                                    if (par != c.Parameters[^1])
-                                    {
-                                        text += value == null ? "" : $" = {value}, ";
-                                    }
-                                    else
-                                    {
-                                        text += value == null ? "" : $" = {value}";
-                                    }
-                                }
-                            }
-                            
-                            text += ")\n";
+                            f.Name = $"*{modName}*";
+                            f.Value = string.IsNullOrWhiteSpace(text) ? "Empty == true" : text;
+                            f.IsInline = false;
                         });
-
-                        f.Name = mod.Name.Replace("Module", "");
-                        f.Value = text;
-                        f.IsInline = false;
-                    });
+                    }
                 }
             }
             else
             {
                 string name = "";
-                ModuleInfo module = commandService.Modules.First((ModuleInfo mod) =>
+                ModuleInfo module = commandService.Modules.First(mod =>
                 {
                     name = mod.Name.Replace("Module", "").ToLower();
-                    return name == modName;
+                    return name == moduleName;
                 });
 
-                if (module != null)
-                {
-                    builder.AddField(f => 
-                    {
-                        module.Commands.ToList().ForEach(c => 
-                        {
-                            text += $"**{c.Name}**(";
-
-                            if (c.Parameters.Count == 1)
-                            {
-                                text += c.Parameters[0].Name;
-                                text += c.Parameters[0].DefaultValue == null ? "" : $" = {c.Parameters[0].DefaultValue}";
-                            }
-                            else
-                            {
-                                c.Parameters.ToList().ForEach(p => 
-                                {
-                                    text += p.Name;
-
-                                    if (p != c.Parameters[^1])
-                                    {
-                                        text += p.DefaultValue == null ? ", " : $" = {p.Name}, ";
-                                    }
-                                    else
-                                    {
-                                        text += p.DefaultValue == null ? "" : $" = {p.Name}";
-                                    }
-                                });
-                            }
-
-                            text += ")\n";
-                        });
-
-                        f.Name = name;
-                        f.Value = text;
-                        f.IsInline = true;
-                    });
-                }
-                else
+                if (module == null)
                 {
                     builder.AddField(f =>
                     {
@@ -122,91 +70,102 @@ namespace Scratch_Bot_core.Modules
                         f.Value = $"Could not find {modName}.";
                     });
                 }
+                else
+                {
+                    ForeachCommand(module, ref text);
+                    builder.AddField(f =>
+                    {
+                        f.Name = name;
+                        f.Value = string.IsNullOrWhiteSpace(text) ? "Empty == true" : text;
+                        f.IsInline = true;
+                    });
+                }
             }
-        }
-
-        [Command("h", true)]
-        public async Task HelpCommand(string moduleName = "")
-        {
-            EmbedBuilder builder = new()
-            {
-                Title = "Help",
-            };
-
-            BuildEmbed(ref builder, moduleName);
-            
             await SendEmbed(builder);
         }
 
-        #endregion
-
-        #region help
-        //[Command("help")]
-        //[Summary("Displays All Commands")]
-        //public async Task Help(string _name = "")
-        //{
-        //    EmbedBuilder _embed = new();
-        //    ModuleInfo _mod;
-        //    if (string.IsNullOrEmpty(_name))
-        //    {
-        //        _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() != "");
-        //        if (_mod == null)
-        //        {
-        //            await ReplyAsync("bot confussion...");
-        //            return;
-        //        }
-        //
-        //        _embed.Description = $"{_mod.Summary}\n" +
-        //                             (!string.IsNullOrEmpty(_mod.Remarks) ? $"{_mod.Remarks}" : $"") +
-        //                             (_mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "");
-        //    }
-        //    else
-        //    {
-        //        _mod = commandService.Modules.FirstOrDefault(m => m.Name.Replace("Module", "").ToLower() == _name.ToLower());
-        //        if (_mod == null)
-        //        {
-        //            await ReplyAsync("No mod with that name was found...");
-        //            return;
-        //        }
-        //
-        //        _embed.Description = _mod.Submodules.Any() ? $"Sub mods: {string.Join(", ", _mod.Submodules.Select(m => m.Name))}" : "";
-        //    }
-        //
-        //    _embed.Title = _mod.Name;
-        //    _embed.Color = Color.DarkBlue;
-        //
-        //    AddCommands(_mod, ref _embed);
-        //
-        //    await ReplyAsync(embed: _embed.Build());
-        //}
-
-        private void AddCommands(ModuleInfo mod, ref EmbedBuilder embed)
+        void ForeachCommand(ModuleInfo mod, ref string text)
         {
-            foreach (CommandInfo item in mod.Commands)
+            string txt = "";
+            mod.Commands.ToList().ForEach(c =>
             {
-                item.CheckPreconditionsAsync(Context, provider).GetAwaiter().GetResult();
-                AddCommand(item, ref embed);
+                // TODO fix mod.parent.group 2 level limit
+                txt += $"**{Settings.CommandPrefix}{(mod.IsSubmodule ? $"{mod.Parent.Group} " : "")}{(string.IsNullOrWhiteSpace(mod.Group) ? "" : $"{mod.Group} ")}{c.Name}**";
+                if (c.Parameters.Count > 0)
+                {
+                    ForeachParameter(c, ref txt);
+                }
+
+                if (!string.IsNullOrWhiteSpace(c.Summary))
+                {
+                    txt += "\n";
+                    txt += $"[{c.Summary}]";
+                    txt += "\n";
+                }
+                else
+                {
+                    txt += "\n";
+                }
+            });
+            text += txt;
+        }
+
+        private void ForeachParameter(CommandInfo c, ref string text)
+        {
+            object? value = null;
+
+            text += " (";
+            if (c.Parameters.Count == 1)
+            {
+                var par = c.Parameters[0];
+                AddParameterName(ref text, par);
+                value = par.DefaultValue;
+
+                if (value != null)
+                {
+                    if (value is string)
+                    {
+                        text += $" = \"{value}\"";
+                    }
+                    else
+                    {
+                        text += $" = {value}";
+                    }
+                }
+            }
+            else
+            {
+                foreach (var par in c.Parameters)
+                {
+                    AddParameterName(ref text, par);
+                    value = par.DefaultValue;
+                    string isString = value is string ? "\"" : "";
+
+                    if (par != c.Parameters[^1])
+                    {
+                        text += value == null ? ", " : $" = {isString}{value}{isString}, ";
+                    }
+                    else
+                    {
+                        text += value == null ? "" : $" = {isString}{value}{isString}";
+                    }
+                }
+            }
+            text += ")";
+
+            static void AddParameterName(ref string txt, ParameterInfo par)
+            {
+                // edge case for clearity
+                if (par.Type == typeof(string) && par.DefaultValue == null)
+                {
+                    txt += $"\"{par.Name}\"";
+                }
+                else
+                {
+                    txt += par.Name;
+                }
             }
         }
-
-        private static void AddCommand(CommandInfo info, ref EmbedBuilder embed)
-        {
-            string value = string.Format(
-                "**how to use** `{0}{1}`\n{2}\n{3}",
-                Settings.CommandPrefix,
-                info.Aliases[0],
-                info.Summary,
-                (string.IsNullOrEmpty(info.Remarks) ? "" : '\n' + info.Remarks + '\n')
-                );
-
-            embed.AddField(f =>
-            {
-                f.Name = $"__**{info.Name}**__";
-                f.Value = value;
-            });
-        }
-        #endregion help
-        
 
         private readonly CommandService commandService;
         private readonly IServiceProvider provider;

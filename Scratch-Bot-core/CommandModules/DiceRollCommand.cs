@@ -40,19 +40,20 @@ namespace Scratch_Bot_core.Modules
     public partial class EmptyModule : CustomBaseModule
     {
         [Command("Roll")]
-        public async Task RollXAmountDice(int amountDice, DiceType Die)
+        [Remarks("Roll n D 4, 6, 8, 10, 12, 20, 100 dice (n == any positive number)")]
+        public async Task RollXAmountDice(int amountOfDice, DiceType diceToRoll)
         {
             EmbedBuilder builder = new()
             {
                 Color = Color.Orange,
-                Title = $"{amountDice}{Die}",
+                Title = $"{amountOfDice}{diceToRoll}",
             };
 
             List<DiceRoll> rolls = new();
 
-            for (int i = 0; i < amountDice; i++)
+            for (int i = 0; i < amountOfDice; i++)
             {
-                rolls.Add(new DiceRoll(Die).Roll());
+                rolls.Add(new DiceRoll(diceToRoll).Roll());
             }
 
             foreach (var item in rolls)

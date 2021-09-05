@@ -1,26 +1,24 @@
 ﻿using Discord;
 using Discord.Commands;
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Scratch_Bot_core.Modules
 {
     public partial class EmptyModule : CustomBaseModule
     {
-        public EmptyModule(IServiceProvider _provider)
+        public EmptyModule()
         {
-            provider = _provider;
         }
 
-        [Command("no")]
+        [Command("No")]
         public async Task No()
         {
             await ReplyAsync("awh :crying_cat_face:");
         }
 
-        [Command("wisper", true)]
-        [Description("leaving a message without peeps knowing who it comes from")]
+        [Command("Wisper", true)]
+        [Summary("leaving a message without peeps knowing who it comes from")]
         [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ManageMessages)]
         public async Task Wisp([Remainder] string msg)
         {
@@ -31,7 +29,8 @@ namespace Scratch_Bot_core.Modules
             await ReplyAsync(msg, embed: _embed.Description != "" ? _embed.Description != null ? _embed.Build() : null : null);
         }
 
-        [Command("user", true)]
+        [Command("User", true)]
+        [Summary("Display user info, not giving a user gives caller`s info (username + current status + rough account age)")]
         public async Task GetUserInfo(IUser? user = null)
         {
             user ??= Context.User;
@@ -54,7 +53,5 @@ namespace Scratch_Bot_core.Modules
 
             await SendEmbed(builder);
         }
-
-        private readonly IServiceProvider provider;
     }
 }

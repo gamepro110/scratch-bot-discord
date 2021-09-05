@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,8 +11,8 @@ namespace Scratch_Bot_core.Modules
     [Group("Voice")]
     public class VoiceChatModule : CustomBaseModule
     {
-        [Command("all")]
-        [Description("gets a list of all the peeps in all voice chats")]
+        [Command("All")]
+        [Summary("gets a list of all the peeps in all voice chats")]
         public async Task GetAllUsersInGuildVC()
         {
             EmbedBuilder builder = new() 
@@ -43,7 +42,7 @@ namespace Scratch_Bot_core.Modules
         }
 
         [Command("Status")]
-        [Description("sends a list of every one in your voice chat")]
+        [Summary("sends a list of every one in your voice chat")]
         public async Task GetUsersInRequestorVC()
         {
             EmbedBuilder builder = new()
@@ -85,26 +84,6 @@ namespace Scratch_Bot_core.Modules
                 f.Value = txt;
             });
 
-            //IVoiceChannel s = (Context.User as IVoiceState).VoiceChannel;
-            //if (s != null)
-            //{
-            //    _embed.Color = Color.Teal;
-            //    _embed.Description += DateTime.Now.ToString("yy/MM/dd hh:mm tt\n");
-            //    _embed.Description += $"Channel: {s.Name}\n\n";
-            //
-            //    await foreach (var item in s.GetUsersAsync())
-            //    {
-            //        foreach (SocketGuildUser usr in item)
-            //        {
-            //            _embed.Description += $"{usr.Nickname}\n";
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    _embed.Color = Color.Orange;
-            //    _embed.Description += "enter a voice chat and reuse command";
-            //}
             await ReplyAsync(embed: builder.Build());
         }
     }
