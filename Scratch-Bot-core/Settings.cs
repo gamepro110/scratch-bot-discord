@@ -11,7 +11,7 @@ namespace Scratch_Bot_core
 
         // Logging
         public const LogFormat BotLogFormat = LogFormat.twoLine;
-        public const LogSeverity BotLogLevel = LogSeverity.Warning;
+        public const LogSeverity BotLogLevel = LogSeverity.Error;
         public const string LogFile = "ScratchBot.log";
 
         // DiscordSocketClient
