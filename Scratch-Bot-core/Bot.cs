@@ -61,7 +61,7 @@ namespace Scratch_Bot_core
                 await Task.Delay(800);
             }
 
-            await loggingService.Log("Exiting...", LogSeverity.Info);
+            await loggingService.Log("Exiting...\n", LogSeverity.Info);
         }
 
         private Task HandleIncommingMessageAsync(SocketMessage recievedMessage)

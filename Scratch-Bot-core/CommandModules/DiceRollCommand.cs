@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,12 +36,23 @@ namespace Scratch_Bot_core.Modules
         private DiceType TypeOfDice { get; init; }
     }
 
-    
+
     public partial class EmptyModule : CustomBaseModule
     {
+        [Command("temp")]
+        public async Task TempTask(int num = 30)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                await ReplyAsync($"text {i}");
+            }
+
+            await ReplyAsync("done");
+        }
+
         [Command("Roll")]
-        [Remarks("Roll n D 4, 6, 8, 10, 12, 20, 100 dice (n == any positive number)")]
-        public async Task RollXAmountDice(int amountOfDice, DiceType diceToRoll)
+        [Remarks("Roll n D4, 6, 8, 10, 12, 20, 100 dice (n == any positive number)")]
+        public async Task RollXAmountDice(int amountOfDice, DiceType diceToRoll) // TODO add field limit of 25
         {
             EmbedBuilder builder = new()
             {
@@ -71,10 +82,10 @@ namespace Scratch_Bot_core.Modules
 
             string txt = string.Format(
                 "({0}+{1}) = {2}",
-                (rolls.Count >2)?string.Join(
+                (rolls.Count > 2) ? string.Join(
                     "+",
                     rolls
-                        .GetRange(0, rolls.IndexOf(rolls[^2]))
+                        .GetRange(0, rolls.Count - 1)
                         .Select(r => r.value)
                 ) : rolls[0].value,
                 rolls[^1].value,

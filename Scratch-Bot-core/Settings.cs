@@ -32,11 +32,8 @@ namespace Scratch_Bot_core
 
         public static string WebhookUrl
         {
-            get
-                => webhookUrl;
-
-            set
-                => webhookUrl = webhookUrl == string.Empty ? value : webhookUrl;
+            get => webhookUrl;
+            set => webhookUrl = webhookUrl == string.Empty ? value : webhookUrl;
         }
 
         internal static readonly DiscordSocketConfig socketConfig = new()

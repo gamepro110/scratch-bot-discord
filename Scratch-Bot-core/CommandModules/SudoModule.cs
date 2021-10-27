@@ -35,6 +35,7 @@ namespace Scratch_Bot_core.Modules
         [RequireUserPermission(ChannelPermission.ManageMessages), RequireBotPermission(ChannelPermission.ManageMessages)]
         public async Task PurgeMessages(int amount = 10)
         {
+            // TODO add functionality to delete messages older than 14 days using paralel(?) for loop
             // TODO make deleting calling message optional
             EmbedBuilder _em = new();
 

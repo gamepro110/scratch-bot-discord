@@ -23,15 +23,15 @@ if (app != null)
         }
         else
         {
-            await loggingService.Log($"something went wrong while reading {Settings.TokenFile}", Discord.LogSeverity.Error);
+            await loggingService.Log($"something went wrong while reading {Settings.TokenFile}\n", Discord.LogSeverity.Error);
         }
     }
     else
     {
-        await loggingService.Log($"{Settings.TokenFile} not found", LogSeverity.Error);
+        await loggingService.Log($"{Settings.TokenFile} not found\n", LogSeverity.Error);
     }
 }
 else
 {
-    await loggingService.Log("IAPP was null...", LogSeverity.Error);
+    await loggingService.Log("IAPP was null...\n", LogSeverity.Error);
 }
