@@ -23,7 +23,7 @@ namespace Scratch_Bot_core.TypeReaders
                 return Task.FromResult(TypeReaderResult.FromSuccess(result));
             }
 
-            return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "input could not be parsed as boolean"));
+            return Task.FromResult(TypeReaderResult.FromError(CommandError.ParseFailed, "input could not be parsed as <DiceType>"));
         }
     }
 }
