@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Scratch_Bot_core.Modules
         }
 
         [Command("H", true)]
-        [Summary("Test Summary")]
+        [Summary("Help Summary")]
         public async Task HelpCommand(string moduleName = "")
         {
             EmbedBuilder builder = new()
@@ -84,7 +85,7 @@ namespace Scratch_Bot_core.Modules
             await SendEmbed(builder);
         }
 
-        void ForeachCommand(ModuleInfo mod, ref string text)
+        private void ForeachCommand(ModuleInfo mod, ref string text)
         {
             string txt = "";
             mod.Commands.ToList().ForEach(c =>
