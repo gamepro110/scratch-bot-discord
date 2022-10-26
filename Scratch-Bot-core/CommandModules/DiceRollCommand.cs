@@ -19,7 +19,7 @@ namespace Scratch_Bot_core.Modules
         d100 = 100,
     }
 
-    class DiceRoll
+    public class DiceRoll
     {
         public DiceRoll(DiceType type)
         {
@@ -28,14 +28,14 @@ namespace Scratch_Bot_core.Modules
 
         public DiceRoll Roll()
         {
-            value = new Random().Next(0, (int)TypeOfDice) + 1;
+            long val = new Random().Next(int.MaxValue) * new Random().Next(int.MaxValue);
+            value = 1 + Convert.ToInt32(val % (int)TypeOfDice);
             return this;
         }
 
         public int value;
         private DiceType TypeOfDice { get; init; }
     }
-
 
     public partial class EmptyModule : CustomBaseModule
     {
@@ -48,6 +48,23 @@ namespace Scratch_Bot_core.Modules
             }
 
             await ReplyAsync("done");
+        }
+
+        [Command("Roll")]
+        [Remarks("Roll a D4, 6, 8, 10, 12, 20, 100 die")]
+        public async Task RollDice(DiceType diceToRoll)
+        {
+            EmbedBuilder builder = new()
+            {
+                Color = Color.Orange,
+                Title = $"{diceToRoll}"
+            };
+
+            DiceRoll roll = new DiceRoll(diceToRoll).Roll();
+
+            builder.Description = $"{roll.value}";
+
+            await SendEmbed(builder);
         }
 
         [Command("Roll")]
@@ -67,36 +84,44 @@ namespace Scratch_Bot_core.Modules
                 rolls.Add(new DiceRoll(diceToRoll).Roll());
             }
 
-            foreach (var item in rolls)
+            if (amountOfDice > 1)
             {
+                foreach (var item in rolls)
+                {
+                    builder.AddField(f =>
+                    {
+                        f.Name = $"{rolls.IndexOf(item) + 1}e roll";
+                        f.Value = $"{item.value}";
+                        f.IsInline = true;
+                    });
+                }
+
+                int sum = 0;
+                rolls.ForEach(roll => sum += roll.value);
+
+                string txt = string.Format(
+                    "({0}+{1}) = {2}",
+                    (rolls.Count > 2) ? string.Join(
+                        "+",
+                        rolls
+                            .GetRange(0, rolls.Count - 1)
+                            .Select(r => r.value)
+                    ) : rolls[0].value,
+                    rolls[^1].value,
+                    sum
+                );
+
                 builder.AddField(f =>
                 {
-                    f.Name = $"{rolls.IndexOf(item) + 1}e roll";
-                    f.Value = $"{item.value}";
-                    f.IsInline = true;
+                    f.Name = "Total";
+                    f.Value = txt;
                 });
             }
-
-            int sum = 0;
-            rolls.ForEach(roll => sum += roll.value);
-
-            string txt = string.Format(
-                "({0}+{1}) = {2}",
-                (rolls.Count > 2) ? string.Join(
-                    "+",
-                    rolls
-                        .GetRange(0, rolls.Count - 1)
-                        .Select(r => r.value)
-                ) : rolls[0].value,
-                rolls[^1].value,
-                sum
-            );
-
-            builder.AddField(f =>
+            else
             {
-                f.Name = "Total";
-                f.Value = txt;
-            });
+                DiceRoll roll = new DiceRoll(diceToRoll).Roll();
+                builder.Description = $"{roll.value}";
+            }
 
             await SendEmbed(builder);
         }

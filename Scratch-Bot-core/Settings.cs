@@ -10,8 +10,8 @@ namespace Scratch_Bot_core
         public const string TokenFile = "token.tkn";
 
         // Logging
-        public const LogFormat BotLogFormat = LogFormat.twoLine;
-        public const LogSeverity BotLogLevel = LogSeverity.Error;
+        public const LogFormat BotLogFormat = LogFormat.oneLine;
+        public const LogSeverity BotLogLevel = LogSeverity.Warning;
         public const string LogFile = "ScratchBot.log";
 
         // DiscordSocketClient
@@ -41,7 +41,7 @@ namespace Scratch_Bot_core
             AlwaysDownloadUsers = AlwaysDownloadUsers,
             DefaultRetryMode = DefaultRetryMode,
             UseSystemClock = UseSystemClock,
-            ExclusiveBulkDelete = ExclusiveBuilkDelete,
+            //ExclusiveBulkDelete = ExclusiveBuilkDelete, // not available in discord.net.labs
             IdentifyMaxConcurrency = Environment.ProcessorCount / 2,
             LogLevel = BotLogLevel,
         };

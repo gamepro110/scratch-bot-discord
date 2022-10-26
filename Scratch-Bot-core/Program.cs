@@ -1,15 +1,14 @@
 ﻿using Discord;
-using Microsoft.Extensions.DependencyInjection;
-using Scratch_Bot_core;
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
-// configue service provider
+using Microsoft.Extensions.DependencyInjection;
+
+using Scratch_Bot_core;
+
+using System.IO;
+
 ServiceProvider provider = (ServiceProvider)ContainerConfig.Configure();
 IApp app = (IApp)provider.GetService(typeof(IApp));
-LoggingService loggingService = (LoggingService)provider.GetService(typeof(LoggingService));
+ILogger loggingService = (ILogger)provider.GetService(typeof(ILogger));
 
 if (app != null)
 {

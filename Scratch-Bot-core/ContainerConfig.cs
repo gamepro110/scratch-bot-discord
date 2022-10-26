@@ -1,6 +1,7 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+
 using Scratch_Bot_core.Modules;
 using Scratch_Bot_core.TypeReaders;
 using System;
@@ -19,7 +20,7 @@ namespace Scratch_Bot_core
             // logging
             //.AddSingleton<ILogger, ConsoleLoggingService>()
             .AddSingleton<ILogger, FileLoggingService>()
-            .AddSingleton<ILogger, WebhookLoggingService>()
+            //.AddSingleton<ILogger, WebhookLoggingService>()
             .AddSingleton<LoggingService>(provider => new(provider.GetServices<ILogger>()))
             // TypeReaders
             .AddSingleton<DiceTypeReader>()
