@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scratch-Bot-core", "Scratch-Bot-core\Scratch-Bot-core.csproj", "{B28214A5-7D03-497F-B554-3EF28A760812}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch-Bot-App", "Scratch-Bot-App\Scratch-Bot-App.csproj", "{B28214A5-7D03-497F-B554-3EF28A760812}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch-Bot-Tests", "scratch-bot-tests\Scratch-Bot-Tests.csproj", "{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch-Bot-Lib", "scratch-bot-lib\Scratch-Bot-Lib.csproj", "{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{B28214A5-7D03-497F-B554-3EF28A760812}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B28214A5-7D03-497F-B554-3EF28A760812}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B28214A5-7D03-497F-B554-3EF28A760812}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
