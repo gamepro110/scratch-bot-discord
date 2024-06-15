@@ -4,5 +4,8 @@ Description=discord bot written by voidtools
 [Service]
 ExecStart=/home/void/scratch-bot-discord/build/App ~/token.tkn
 SyslogIdentifier=ScratchBot
-
 User=void
+
+[Install]
+Alias=ScratchBot
+WantedBy=default.target
