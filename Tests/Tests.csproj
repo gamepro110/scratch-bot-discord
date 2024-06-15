@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\scratch-bot-lib\Scratch-Bot-Lib.csproj" />
+    <ProjectReference Include="..\Lib\Lib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

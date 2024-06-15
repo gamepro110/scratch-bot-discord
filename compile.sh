@@ -18,7 +18,7 @@ if [ ! -d ./build ]; then
 fi
 
 echo "copy build to dir"
-cp -r Scratch-Bot-App/bin/Release/net8.0/publish/* build/
+cp -r App/bin/Release/net8.0/publish/* build/
 
 echo "copy service file"
-cp Scratch-Bot.service /etc/systemd/system/Scratch-Bot.service
+sudo cp Scratch-Bot.service /etc/systemd/system/Scratch-Bot.service

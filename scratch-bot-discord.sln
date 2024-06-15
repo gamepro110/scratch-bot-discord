@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch-Bot-App", "Scratch-Bot-App\Scratch-Bot-App.csproj", "{B28214A5-7D03-497F-B554-3EF28A760812}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "App\App.csproj", "{B28214A5-7D03-497F-B554-3EF28A760812}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch-Bot-Tests", "scratch-bot-tests\Scratch-Bot-Tests.csproj", "{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{FC1000F0-C9CA-4CA9-8459-485FAD89CCE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scratch-Bot-Lib", "scratch-bot-lib\Scratch-Bot-Lib.csproj", "{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib", "Lib\Lib.csproj", "{DF5FA3FB-E480-488E-B0E7-2BC1786E07C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
