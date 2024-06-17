@@ -4,6 +4,7 @@ using Discord;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.IO;
+using System;
 
 namespace Scratch_Bot_App
 {
@@ -20,8 +21,8 @@ namespace Scratch_Bot_App
                     string[] argLines = File.ReadAllLines(Settings.TokenFile);
                     if (argLines.Length == 2)
                     {
-                        Settings.WebhookUrl = argLines[0]; // set the webhook url
-                        await app.Run(argLines[1]);
+                        Settings.WebhookUrl = argLines[1]; // set the webhook url
+                        await app.Run(argLines[0]);
                     }
                     else
                     {

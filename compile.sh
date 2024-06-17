@@ -10,6 +10,7 @@ outputDir=./build
 publishDir=./App/bin/Release/net8.0/linux-arm64
 servicePath=/etc/systemd/system
 serviceFilename=scratchBot.service
+tknFile=token.tkn
 
 echo "cleaning old stuff"
 if [ -d $outputDir ]; then
