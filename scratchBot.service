@@ -7,5 +7,4 @@ SyslogIdentifier=scratchBot
 ExecStart=/home/void/scratch-bot-discord/build/App ~/token.tkn
 
 [Install]
-Alias=scratchBot
 WantedBy=default.target
