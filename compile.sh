@@ -1,24 +1,30 @@
 #!/bin/bash
+clear
 set -e
 # --self-contained true for compiling the runtime into the project
 # -r for os+architecture
 # project file = Scratch-Bot-core/Scratch-Bot-core.csproj
 # -o for output directory
 #dotnet publish --self-contained true -r linux-arm64 Scratch-Bot-core/Scratch-Bot-core.csproj -o build/
+outputDir=./build
+publishDir=./App/bin/Release/net8.0/linux-arm64
+servicePath=/etc/systemd/system
+serviceFilename=scratchBot.service
+
 echo "cleaning old stuff"
-if [ -d ./build ]; then
-    rm -r ./build
+if [ -d $outputDir ]; then
+    rm -r $outputDir
 fi
 
 echo "compiling and testing"
-dotnet publish && dotnet test
+dotnet test && dotnet publish --os linux --arch arm64 --self-contained
 
-if [ ! -d ./build ]; then
+if [ ! -d $outputDir ]; then
     mkdir build
 fi
 
 echo "copy build to dir"
-cp -r App/bin/Release/net8.0/publish/* build/
+cp -r $publishDir/* $outputDir/
 
 echo "copy service file"
-sudo cp Scratch-Bot.service /etc/systemd/system/Scratch-Bot.service
+sudo cp $serviceFilename $servicePath/$serviceFilename
