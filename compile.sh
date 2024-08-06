@@ -27,5 +27,8 @@ fi
 echo "copy build to dir"
 cp -r $publishDir/* $outputDir/
 
+echo "copy tkn file"
+sudo cp ~/$tknFile /
+
 echo "copy service file"
 sudo cp $serviceFilename $servicePath/$serviceFilename
