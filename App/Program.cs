@@ -5,14 +5,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System.IO;
 using System;
+using System.Threading.Tasks;
 
 namespace Scratch_Bot_App
 {
     public class Program
     {
-        public static void Main() => Run();
+        public static async Task Main()
+        {
+            Console.WriteLine("bot starting");
+            await Run();
+            Console.WriteLine("bot stopping");
+        }
 
-        private static async void Run()
+        private static async Task Run()
         {
             if (app != null)
             {

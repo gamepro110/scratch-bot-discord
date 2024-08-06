@@ -5,6 +5,13 @@
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Scratch_Bot_App</RootNamespace>
     <Nullable>enable</Nullable>
+    
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>linux-arm64</RuntimeIdentifier>
+    <!--
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    -->
   </PropertyGroup>
 
   <ItemGroup>
